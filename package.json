@@ -1,0 +1,23 @@
+{
+  "name": "auth0-extension",
+  "version": "1.0.0",
+  "description": "My extension for ..",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "bundle": "wt-bundle webtask.js --prod -o ./build/bundle.js",
+    "create": "wt create ./build/bundle.js --name my-extension --no-parse --no-merge",
+    "deploy": "npm run bundle && npm run create"
+  },
+  "keywords": [
+    "auth0",
+    "extension"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "auth0-oauth2-express": "^1.0.3",
+    "express": "4.12.4",
+    "webtask-tools": "1.3.0"
+  }
+}

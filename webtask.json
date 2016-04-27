@@ -1,0 +1,13 @@
+{
+  "title": "Auth0 Extension Boilerplate",
+  "name": "auth0-extension-boilerplate",
+  "version": "1.0.0",
+  "author": "auth0",
+  "description": "This is a Hello World extension",
+  "type": "application",
+  "repository": "https://github.com/auth0/auth0-extension-boilerplate",
+  "keywords": [
+    "auth0",
+    "extension"
+  ]
+}
