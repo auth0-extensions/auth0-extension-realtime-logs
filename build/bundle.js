@@ -53,7 +53,7 @@ app.post('/',
             res.status(403);
             res.send(ejs.render(notAuthorizedTemplate, {
                 baseUrl: req.baseUrl
-            });
+            }));
         }
     });
 
