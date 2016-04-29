@@ -51,7 +51,7 @@ app.post('/',
         }
         else {
             res.status(403);
-            res.send(ejs.render(notAuthorizedTemplate. {
+            res.send(ejs.render(notAuthorizedTemplate, {
                 baseUrl: req.baseUrl
             });
         }
