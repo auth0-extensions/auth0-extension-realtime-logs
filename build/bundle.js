@@ -62,7 +62,7 @@ app.get('/meta', function (req, res) {
     res.json({
       "title": "Real-time Webtask Logs",
       "name": "auth0-extension-realtime-logs",
-      "version": "1.0.4",
+      "version": "1.0.0",
       "author": "Auth0, Inc",
       "description": "Access real-time webtask logs",
       "type": "application",
@@ -137,7 +137,7 @@ var logsTemplate = s(function () {/*
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container text-center">
         <h2><img src="https://cdn.auth0.com/styleguide/1.0.0/img/badge.svg" alt="Auth0 badge" height=30 /> Logs of <%= container %></h2>
         <a href="https://auth0.auth0.com/logout?returnTo=<%- baseUrl %>" class="text-small">Logout from Auth0</a>
     </div>
