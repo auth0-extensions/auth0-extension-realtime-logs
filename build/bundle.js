@@ -57,6 +57,26 @@ app.post('/',
         }
     });
 
+app.get('/meta', function (req, res) {
+    // Keep this manually in sync with webtask.json (to avoid bundling step)
+    res.json({
+      "title": "Real-time Webtask Logs",
+      "name": "auth0-extension-realtime-logs",
+      "version": "1.0.4",
+      "author": "Auth0, Inc",
+      "description": "Access real-time webtask logs",
+      "type": "application",
+      "repository": "https://github.com/auth0/auth0-extension-realtime-logs",
+      "keywords": [
+        "auth0",
+        "extension",
+        "webtask",
+        "logs",
+        "real-time"
+      ]
+    });
+});
+
 function s(f) { return f.toString().match(/[^]*\/\*([^]*)\*\/\s*\}$/)[1]; }
 
 var notAuthorizedTemplate = s(function () {/*
