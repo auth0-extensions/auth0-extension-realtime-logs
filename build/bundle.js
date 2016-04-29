@@ -51,7 +51,9 @@ app.post('/',
         }
         else {
             res.status(403);
-            res.send(notAuthorizedTemplate);
+            res.send(ejs.render(notAuthorizedTemplate. {
+                baseUrl: req.baseUrl
+            });
         }
     });
 
@@ -72,7 +74,7 @@ var notAuthorizedTemplate = s(function () {/*
       <div class="row text-center">
         <h1><a href="https://auth0.com" title="Go to Auth0!"><img src="https://cdn.auth0.com/styleguide/1.0.0/img/badge.svg" alt="Auth0 badge" /></a></h1>
         <h1>Not authorized</h1>
-        <p><a href="https://manage.auth0.com/logout">Log out from Auth0 and try again</a></p>
+        <p><a href="https://auth0.auth0.com/logout?returnTo=<%- baseUrl %>">Log out from Auth0 and try again</a></p>
       </div>
     </div>
   </body>

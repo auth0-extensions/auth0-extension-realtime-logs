@@ -1,6 +1,6 @@
 {
   "name": "auth0-extension-realtime-logs",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Access real-time webtask logs",
   "scripts": {
     "deploy": "wt create ./build/bundle.js --name logs --no-parse --no-merge"
