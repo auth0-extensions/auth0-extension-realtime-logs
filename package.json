@@ -1,23 +1,26 @@
 {
-  "name": "auth0-extension",
-  "version": "1.0.0",
-  "description": "My extension for ..",
-  "main": "index.js",
+  "name": "auth0-extension-realtime-logs",
+  "version": "0.0.1",
+  "description": "Access real-time webtask logs",
   "scripts": {
-    "start": "node server.js",
-    "bundle": "wt-bundle webtask.js --prod -o ./build/bundle.js",
-    "create": "wt create ./build/bundle.js --name my-extension --no-parse --no-merge",
-    "deploy": "npm run bundle && npm run create"
+    "deploy": "wt create ./build/bundle.js --name logs --no-parse --no-merge"
   },
   "keywords": [
     "auth0",
-    "extension"
+    "extension",
+    "webtask",
+    "logs",
+    "real-time"
   ],
-  "author": "",
+  "author": "Auth0, Inc",
   "license": "MIT",
   "dependencies": {
-    "auth0-oauth2-express": "^1.0.3",
+    "auth0-oauth2-express": "1.1.7",
     "express": "4.12.4",
-    "webtask-tools": "1.3.0"
+    "webtask-tools": "2.0.1",
+    "body-parser": "1.12.4",
+    "express-jwt": "3.1.0",
+    "auth0-api-jwt-rsa-validation": "0.0.1",
+    "ejs": "2.3.1"
   }
 }

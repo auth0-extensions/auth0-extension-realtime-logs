@@ -1,1 +1,135 @@
-module.exports=function(e){function t(n){if(o[n])return o[n].exports;var r=o[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var o={};return t.m=e,t.c=o,t.p="/build/",t(0)}([function(e,t,o){"use strict";var n=o(1);e.exports=n.fromExpress(o(2))},function(e,t){e.exports=require("webtask-tools")},function(e,t,o){"use strict";var n=o(3),r=o(4),s=(o(1),n());s.use(r({scopes:"read:connections"})),s.get("/",function(e,t){var o=["<html>","  <head>","    <title>Auth0 Extension</title>",'    <script type="text/javascript">','       if (!sessionStorage.getItem("token")) {','         window.location.href = "'+t.locals.baseUrl+'/login";',"       }","    </script>","  </head>","  <body>","    <p><strong>Token</strong></p>",'    <textarea rows="10" cols="100" id="token"></textarea>','    <script type="text/javascript">','       var token = sessionStorage.getItem("token");',"       if (token) {",'         document.getElementById("token").innerText = token;',"       }","    </script>","  </body>","</html>"].join("\n");t.header("Content-Type","text/html"),t.status(200).send(o)}),e.exports=s},function(e,t){e.exports=require("express")},function(e,t,o){function n(e){return e&&"[object Function]"==x.call(e)}function r(e,t,o){h.get("https://auth0.auth0.com/userinfo").set("Authorization","Bearer "+e.query.access_token).end(function(n,r){return n?void t.redirect(t.locals.baseUrl):(e.userInfo=r.body,void o())})}function s(e){return function(t,o,r){var s,i=e;n(e)&&(i=e(t)),s=f.sign(t.userInfo,i,{algorithm:"HS256",issuer:o.locals.baseUrl}),delete t.userinfo,t.apiToken=s,r()}}var i=o(3),a=o(5),c=i.Router(),l=o(6),u=o(7),p=o(8),d=o(9),f=o(10),h=o(11),m=864e5,x={}.toString;e.exports=function(e){var t=function(e,t,o){o()},n=[t];return e=e||{},e.clientName=e.clientName||"Auth0 Extension",e.clientId=e.clientId,e.exp=e.exp||m,e.credentialsRequired="undefined"==typeof e.credentialsRequired?!1:e.credentialsRequired,e.scopes=e.scopes+" openid profile",e.responseType=e.responseType||"token",e.apiToken&&!e.apiToken.secret&&(console.log('You are using a "development secret" for API token generation. Please setup your secret on "apiToken.secret".'),e.apiToken.secret=o(12).randomBytes(32).toString("hex")),e.apiToken&&e.apiToken.secret&&(n=[r,e.apiToken.payload||t,s(e.apiToken.secret)]),c.use(function(t,o,n){var r="https",s=u.parse(t.originalUrl).pathname.replace(t.path,"");"development"===(process.env.NODE_ENV||"development")&&(r=t.protocol,e.clientId=e.clientId||"N3PAwyqXomhNu6IWivtsa3drBfFjmWJL"),o.locals.baseUrl=u.format({protocol:r,host:t.get("host"),pathname:s}),n()}),c.use(d.urlencoded({extended:!1})),c.use(l({secret:p(),algorithms:["RS256"],credentialsRequired:e.credentialsRequired}).unless({path:["/login","/callback"]})),c.get("/login",function(t,o){var n=["https://auth0.auth0.com/i/oauth2/authorize","?client_id="+(e.clientId||o.locals.baseUrl),"&response_type="+e.responseType,"&response_mode=form_post","&scope="+encodeURIComponent(e.scopes),"&expiration="+e.exp,"&redirect_uri="+o.locals.baseUrl+"/callback"].join("");o.redirect(n)}),c.get("/logout",function(e,t){var o=["html","  head","    script.","      sessionStorage.removeItem('token')","      sessionStorage.removeItem('apiToken')","      window.location.href = 'https://auth0.auth0.com/v2/logout?returnTo=#{baseUrl}';","  body"].join("\n"),n=a.compile(o)({baseUrl:t.locals.baseUrl});t.header("Content-Type","text/html"),t.status(200).send(n)}),c.post("/callback",function(e,t){t.redirect(t.locals.baseUrl+"/callback?access_token="+e.body.access_token)}),c.get("/callback",n,function(e,t){var o=["html","  head","    script.","      sessionStorage.setItem('token', '"+e.query.access_token+"');",1===n.length?"":"      sessionStorage.setItem('apiToken', '"+e.apiToken+"');","      window.location.href = '#{baseUrl}';","  body"].join("\n"),r=a.compile(o)({baseUrl:t.locals.baseUrl});t.header("Content-Type","text/html"),t.status(200).send(r)}),c.get("/.well-known/oauth2-client-configuration",function(t,o){o.header("Content-Type","application/json"),o.status(200).send({redirect_uris:[o.locals.baseUrl+"/callback"],client_name:e.clientName})}),c}},function(e,t){e.exports=require("jade")},function(e,t){e.exports=require("express-jwt")},function(e,t){e.exports=require("url")},function(e,t){e.exports=require("auth0-api-jwt-rsa-validation")},function(e,t){e.exports=require("body-parser")},function(e,t){e.exports=require("jsonwebtoken")},function(e,t){e.exports=require("superagent")},function(e,t){e.exports=require("crypto")}]);
+var url = require('url');
+var bodyParser = require('body-parser');
+var expressJwt = require('express-jwt');
+var rsaValidation = require('auth0-api-jwt-rsa-validation');
+var ejs = require('ejs');
+var app = new (require('express'))();
+
+app.use(function (req, res, next) {
+    req.baseUrl = [
+        req.get('x-forwarded-proto') || 'https',
+        '://',
+        req.get('host'),
+        url.parse(req.originalUrl).pathname
+    ].join('');
+    req.audience = 'https://' + req.x_wt.container + '.auth0.com/api/v2/';
+    next();
+});
+
+app.get('/', function (req, res) {
+    res.redirect([
+        'https://auth0.auth0.com/i/oauth2/authorize',
+        '?client_id=', req.baseUrl,
+        '&response_type=token&expiration=86400000&response_mode=form_post',
+        '&scope=', encodeURIComponent('openid profile'),
+        '&redirect_uri=', req.baseUrl,
+        '&audience=', req.audience
+    ].join(''));
+});
+
+app.get('/.well-known/oauth2-client-configuration', function (req, res) {
+    res.json({
+      redirect_uris: [ req.baseUrl.replace('/.well-known/oauth2-client-configuration','') ],
+      client_name: 'Auth0 Extension'
+    });
+});
+
+app.post('/', 
+    bodyParser.urlencoded({ extended: false }),
+    expressJwt({
+        secret: rsaValidation(),
+        algorithms: [ 'RS256' ],
+        getToken: req => req.body.access_token
+    }),
+    function (req, res) {
+        if (req.user.aud === req.audience || Array.isArray(req.user.aud) && req.user.aud.indexOf(req.audience) > -1) {
+            res.send(ejs.render(logsTemplate, {
+                token: req.x_wt.token,
+                container: req.x_wt.container,
+                baseUrl: req.baseUrl
+            }));
+        }
+        else {
+            res.status(403);
+            res.send(notAuthorizedTemplate);
+        }
+    });
+
+function s(f) { return f.toString().match(/[^]*\/\*([^]*)\*\/\s*\}$/)[1]; }
+
+var notAuthorizedTemplate = s(function () {/*
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.auth0.com/styleguide/latest/index.css" rel="stylesheet" />
+    <title>Access denied</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row text-center">
+        <h1><a href="https://auth0.com" title="Go to Auth0!"><img src="https://cdn.auth0.com/styleguide/1.0.0/img/badge.svg" alt="Auth0 badge" /></a></h1>
+        <h1>Not authorized</h1>
+        <p><a href="https://manage.auth0.com/logout">Log out from Auth0 and try again</a></p>
+      </div>
+    </div>
+  </body>
+</html>
+*/});
+
+var logsTemplate = s(function () {/*
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://cdn.auth0.com/webtaskWidget/auth0-webtask-widget-1.min.js"></script>
+    <link href="https://cdn.auth0.com/styleguide/latest/index.css" rel="stylesheet" />
+    <title>Logs of <%= container %></title>
+    <style>
+        html,
+        body {
+          min-height: 100%;
+          margin: 0;
+        }
+        .banner {
+          position: absolute;
+          top: 0;
+        }
+        .logs {
+          position: absolute;
+          top: 100;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+        h2 {
+            margin-bottom: 0;
+        }
+        .a0-logs-lines {
+            min-height: 100% !important;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h2><img src="https://cdn.auth0.com/styleguide/1.0.0/img/badge.svg" alt="Auth0 badge" height=30 /> Logs of <%= container %></h2>
+        <a href="https://auth0.auth0.com/logout?returnTo=<%- baseUrl %>" class="text-small">Logout from Auth0</a>
+    </div>
+    <div id="widget_container" class="logs"></div>
+    <script>
+    	var logs = webtaskWidget.showLogs({
+			mount: document.getElementById('widget_container'),
+			url: window.location.protocol + '//' + window.location.hostname,
+			token: '<%- token %>',
+			container: '<%- container %>'
+    	});
+    </script>
+  </body>
+</html>
+*/});
+
+module.exports = require('webtask-tools').fromExpress(app);

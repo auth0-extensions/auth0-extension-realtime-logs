@@ -1,13 +1,16 @@
 {
-  "title": "Auth0 Extension Boilerplate",
-  "name": "auth0-extension-boilerplate",
+  "title": "Real-time Webtask Logs",
+  "name": "auth0-extension-realtime-logs",
   "version": "1.0.0",
-  "author": "auth0",
-  "description": "This is a Hello World extension",
+  "author": "Auth0, Inc",
+  "description": "Access real-time webtask logs",
   "type": "application",
-  "repository": "https://github.com/auth0/auth0-extension-boilerplate",
+  "repository": "https://github.com/auth0/auth0-extension-realtime-logs",
   "keywords": [
     "auth0",
-    "extension"
+    "extension",
+    "webtask",
+    "logs",
+    "real-time"
   ]
 }
