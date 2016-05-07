@@ -141,29 +141,46 @@ var logsTemplate = s(function () {/*
     <script type="text/javascript" src="https://cdn.auth0.com/js/navbar-1.0.2.min.js"></script>
     <title>Logs of <%= container %></title>
     <style>
-        html,
-        body {
-          min-height: 100%;
-          margin: 0;
+        body, html {
+          height: 100vh;
+          width: 100vw;
+          display: flex;
+          flex-direction: column;
+          padding-bottom: 0;
         }
-        .banner {
-          position: absolute;
-          top: 0;
+        ​
+        .header {
+          flex: 0 0 100px;
         }
-        .logs {
-          bottom: 0;
-          left: 0;
-          right: 0;
+        .body {
+          flex: 1;
         }
-        h2 {
-            margin-bottom: 0;
-        }
-        .a0-logs-lines {
-            min-height: 90% !important;
+        .container {
+          min-width: 100%;
         }
 
-        header.dashboard-header nav li .btn-dro i {
-          top: 21px;
+        .logs {
+          flex: 1;
+        }
+
+        .message {
+          position: absolute;
+          z-index: 1000;
+          width: 100%;
+          top: 100px;
+          display: none;
+        }
+
+        .message div {
+          height: 75px;
+          width: 250px;
+          background: #707070;
+          vertical-align: middle;
+          margin-left: auto;
+          margin-right: auto;
+          line-height: 71px;
+          border-radius: 3px;
+          text-align: center;
         }
     </style>
     <script type="text/javascript">
@@ -191,7 +208,7 @@ var logsTemplate = s(function () {/*
       </nav>
     </header>
 
-    <div class="container">
+    <div class="container extension-header">
       <div class="row">
         <section class="content-page current">
           <div class="col-xs-12">
@@ -212,13 +229,15 @@ var logsTemplate = s(function () {/*
             <section class="content-page current">
               <div class="content-header">
                 <h1>Real-time Webtask Logs</h1>
+                <button class="btn btn-default pull-right js-full-screen">Full Screen Mode</button>
               </div>
             </section>
           </div>
         </div>
       </div>
-      <div id="widget_container" class="logs" style="height: 90%;"></div>
     </div>
+    <div class="message"><div>Press ESC to exit full screen mode</div></div>
+    <div id="widget_container" class="logs"></div>
     <script>
     	var logs = webtaskWidget.showLogs({
 			mount: document.getElementById('widget_container'),
@@ -226,6 +245,25 @@ var logsTemplate = s(function () {/*
 			token: '<%- token %>',
 			container: '<%- container %>'
     	});
+
+      $('.js-full-screen').on('click', function () {
+        $('.dashboard-header').hide();
+        $('.extension-header').hide();
+        $('body').attr('style', 'padding-top: 0;');
+        $('.message').show();
+
+        setTimeout(function() {
+          $('.message').fadeOut('slow');
+        }, 1500);
+      });
+
+      $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+         $('.dashboard-header').show();
+         $('.extension-header').show();
+         $('body').removeAttr('style');
+        }
+      });
     </script>
   </body>
 </html>
