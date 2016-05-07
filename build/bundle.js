@@ -141,29 +141,26 @@ var logsTemplate = s(function () {/*
     <script type="text/javascript" src="https://cdn.auth0.com/js/navbar-1.0.2.min.js"></script>
     <title>Logs of <%= container %></title>
     <style>
-        html,
-        body {
-          min-height: 100%;
-          margin: 0;
+        body, html {
+          height: 100vh;
+          width: 100vw;
+          display: flex;
+          flex-direction: column;
+          padding-bottom: 0;
         }
-        .banner {
-          position: absolute;
-          top: 0;
+        ​
+        .header {
+          flex: 0 0 100px;
         }
-        .logs {
-          bottom: 0;
-          left: 0;
-          right: 0;
+        .body {
+          flex: 1;
         }
-        h2 {
-            margin-bottom: 0;
-        }
-        .a0-logs-lines {
-            min-height: 90% !important;
+        .container {
+          min-width: 100%;
         }
 
-        header.dashboard-header nav li .btn-dro i {
-          top: 21px;
+        .logs {
+          flex: 1;
         }
     </style>
     <script type="text/javascript">
@@ -217,8 +214,8 @@ var logsTemplate = s(function () {/*
           </div>
         </div>
       </div>
-      <div id="widget_container" class="logs" style="height: 90%;"></div>
     </div>
+    <div id="widget_container" class="logs"></div>
     <script>
     	var logs = webtaskWidget.showLogs({
 			mount: document.getElementById('widget_container'),
