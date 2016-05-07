@@ -154,6 +154,7 @@ var logsTemplate = s(function () {/*
         }
         .body {
           flex: 1;
+<<<<<<< HEAD
         }
         .container {
           min-width: 100%;
@@ -181,6 +182,15 @@ var logsTemplate = s(function () {/*
           line-height: 71px;
           border-radius: 3px;
           text-align: center;
+=======
+        }
+        .container {
+          min-width: 100%;
+        }
+
+        .logs {
+          flex: 1;
+>>>>>>> origin
         }
     </style>
     <script type="text/javascript">
