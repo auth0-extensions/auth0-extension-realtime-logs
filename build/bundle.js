@@ -30,7 +30,8 @@ app.get('/', function (req, res) {
 app.get('/.well-known/oauth2-client-configuration', function (req, res) {
     res.json({
       redirect_uris: [ req.baseUrl.replace('/.well-known/oauth2-client-configuration','') ],
-      client_name: 'Auth0 Extension'
+      client_name: 'Auth0 Extension',
+      post_logout_redirect_uris: [ req.baseUrl.replace('/.well-known/oauth2-client-configuration','') ]
     });
 });
 
@@ -63,7 +64,7 @@ app.get('/meta', function (req, res) {
     res.json({
       "title": "Real-time Webtask Logs",
       "name": "auth0-extension-realtime-logs",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "Auth0, Inc",
       "description": "Access real-time webtask logs",
       "type": "application",
@@ -154,7 +155,6 @@ var logsTemplate = s(function () {/*
         }
         .body {
           flex: 1;
-<<<<<<< HEAD
         }
         .container {
           min-width: 100%;
@@ -182,15 +182,6 @@ var logsTemplate = s(function () {/*
           line-height: 71px;
           border-radius: 3px;
           text-align: center;
-=======
-        }
-        .container {
-          min-width: 100%;
-        }
-
-        .logs {
-          flex: 1;
->>>>>>> origin
         }
     </style>
     <script type="text/javascript">
