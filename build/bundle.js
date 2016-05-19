@@ -12,7 +12,7 @@ app.use(function (req, res, next) {
         req.get('host'),
         url.parse(req.originalUrl).pathname
     ].join('');
-    req.audience = 'https://' + req.x_wt.container + '.auth0.com/api/v2/';
+    req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/'
     next();
 });
 
@@ -93,7 +93,7 @@ var logoutTemplate = s(function () {/*
   <head>
     <script>
       sessionStorage.removeItem('token');
-      window.location.href = 'https://auth0.auth0.com/logout?returnTo=<%- baseUrl.replace('logout', '/')%>';
+      window.location.href = 'https://auth0.auth0.com/logout?returnTo=<%- baseUrl.replace('logout', '/')%>&client_id=<%- baseUrl.replace('logout', '/')%>';
     </script>
   </head>
   <body></body>
