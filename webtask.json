@@ -12,5 +12,10 @@
     "webtask",
     "logs",
     "real-time"
-  ]
+  ],
+  "secrets": {
+      "AUTH0_ROOT_AUTHORITY": {
+        "description": "The DNS name of the root authority of this deployment, e.g. login0.example.com",
+      }
+  }
 }

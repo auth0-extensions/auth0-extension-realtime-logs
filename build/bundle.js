@@ -18,7 +18,7 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.redirect([
-        'https://auth0.auth0.com/i/oauth2/authorize',
+        'https://', req.webtaskContext.data.AUTH0_ROOT_AUTHORITY, '/i/oauth2/authorize',
         '?client_id=', req.baseUrl,
         '&response_type=token&expiration=86400000&response_mode=form_post',
         '&scope=', encodeURIComponent('openid profile'),
