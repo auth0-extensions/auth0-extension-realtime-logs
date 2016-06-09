@@ -1,11 +1,11 @@
 {
   "title": "Real-time Webtask Logs",
   "name": "auth0-extension-realtime-logs",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "author": "Auth0, Inc",
   "description": "Access real-time webtask logs",
   "type": "application",
-  "repository": "https://github.com/auth0/auth0-extension-realtime-logs",
+  "codeUrl": "https://raw.githubusercontent.com/auth0/auth0-extension-realtime-logs/appliance/build/bundle.js",
   "keywords": [
     "auth0",
     "extension",
