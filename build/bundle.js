@@ -6,10 +6,13 @@ var ejs = require('ejs');
 var app = new (require('express'))();
 
 app.use(function (req, res, next) {
+    var xfproto = req.get('x-forwarded-proto');
+    var xfport = req.get('x-forwarded-port');
     req.baseUrl = [
-        req.get('x-forwarded-proto') || 'https',
+        xfproto ? xfproto.split(',')[0].trim() : 'https',
         '://',
         req.get('host'),
+        xfport ? ':' + xfport.split(',')[0].trim() : '',
         url.parse(req.originalUrl).pathname
     ].join('');
     req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/'
