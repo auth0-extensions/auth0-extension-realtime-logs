@@ -8,14 +8,16 @@ var app = new (require('express'))();
 app.use(function (req, res, next) {
     var xfproto = req.get('x-forwarded-proto');
     var xfport = req.get('x-forwarded-port');
+
     req.baseUrl = [
         xfproto ? xfproto.split(',')[0].trim() : 'https',
         '://',
         req.get('host'),
-        xfport ? ':' + xfport.split(',')[0].trim() : '',
+        //xfport ? ':' + xfport.split(',')[0].trim() : '',
         url.parse(req.originalUrl).pathname
     ].join('');
     req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/'
+console.log('CALCULATING BASE URL', xfproto, xfport, req.baseUrl, req.audience);
     next();
 });
 
@@ -31,6 +33,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/.well-known/oauth2-client-configuration', function (req, res) {
+console.log('IN /.well-known/oauth2-client-configuration');
     res.json({
       redirect_uris: [ req.baseUrl.replace('/.well-known/oauth2-client-configuration','') ],
       client_name: 'Auth0 Extension',
@@ -39,6 +42,7 @@ app.get('/.well-known/oauth2-client-configuration', function (req, res) {
 });
 
 app.post('/',
+console.log('IN POST', req.user);
     bodyParser.urlencoded({ extended: false }),
     expressJwt({
         secret: rsaValidation(),
