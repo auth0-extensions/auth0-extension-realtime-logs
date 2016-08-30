@@ -1,7 +1,3 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-
-console.log('INIT WEBTASK', process.env);
-
 var url = require('url');
 var bodyParser = require('body-parser');
 var expressJwt = require('express-jwt');
@@ -48,7 +44,7 @@ console.log('IN /.well-known/oauth2-client-configuration');
 app.post('/',
     bodyParser.urlencoded({ extended: false }),
     expressJwt({
-        secret: rsaValidation(),
+        secret: rsaValidation({ strictSSL: false }),
         algorithms: [ 'RS256' ],
         getToken: req => req.body.access_token
     }),
