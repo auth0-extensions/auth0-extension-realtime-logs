@@ -16,7 +16,7 @@ app.use(function (req, res, next) {
         //xfport ? ':' + xfport.split(',')[0].trim() : '',
         url.parse(req.originalUrl).pathname
     ].join('');
-    req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/'
+    req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/';
 console.log('CALCULATING BASE URL', xfproto, xfport, req.baseUrl, req.audience);
     next();
 });
@@ -42,7 +42,6 @@ console.log('IN /.well-known/oauth2-client-configuration');
 });
 
 app.post('/',
-console.log('IN POST', req.user);
     bodyParser.urlencoded({ extended: false }),
     expressJwt({
         secret: rsaValidation(),
@@ -50,6 +49,7 @@ console.log('IN POST', req.user);
         getToken: req => req.body.access_token
     }),
     function (req, res) {
+console.log('IN POST', req.user);
         if (req.user.aud === req.audience || Array.isArray(req.user.aud) && req.user.aud.indexOf(req.audience) > -1) {
             res.send(ejs.render(logsTemplate, {
                 a0Token: req.body.access_token,
