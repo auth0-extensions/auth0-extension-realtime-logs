@@ -44,7 +44,7 @@ console.log('IN /.well-known/oauth2-client-configuration');
 app.post('/',
     bodyParser.urlencoded({ extended: false }),
     expressJwt({
-        secret: rsaValidation({ strictSSL: false }),
+        secret: rsaValidation({ strictSSL: true }),
         algorithms: [ 'RS256' ],
         getToken: req => req.body.access_token
     }),
