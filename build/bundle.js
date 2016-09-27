@@ -17,13 +17,12 @@ app.use(function (req, res, next) {
         url.parse(req.originalUrl).pathname
     ].join('');
     req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/';
-console.log('CALCULATING BASE URL', xfproto, xfport, req.baseUrl, req.audience);
     next();
 });
 
 app.get('/', function (req, res) {
     res.redirect([
-        'https://', req.webtaskContext.data.AUTH0_ROOT_AUTHORITY, '/i/oauth2/authorize',
+        req.webtaskContext.data.AUTH0_RTA, '/i/oauth2/authorize',
         '?client_id=', req.baseUrl,
         '&response_type=token&expiration=86400000&response_mode=form_post',
         '&scope=', encodeURIComponent('openid profile'),
@@ -33,7 +32,6 @@ app.get('/', function (req, res) {
 });
 
 app.get('/.well-known/oauth2-client-configuration', function (req, res) {
-console.log('IN /.well-known/oauth2-client-configuration');
     res.json({
       redirect_uris: [ req.baseUrl.replace('/.well-known/oauth2-client-configuration','') ],
       client_name: 'Auth0 Extension',
@@ -49,13 +47,14 @@ app.post('/',
         getToken: req => req.body.access_token
     }),
     function (req, res) {
-console.log('IN POST', req.user);
         if (req.user.aud === req.audience || Array.isArray(req.user.aud) && req.user.aud.indexOf(req.audience) > -1) {
             res.send(ejs.render(logsTemplate, {
                 a0Token: req.body.access_token,
                 token: req.x_wt.token,
                 container: req.x_wt.container,
-                baseUrl: req.baseUrl
+                baseUrl: req.baseUrl,
+                rta: req.webtaskContext.data.AUTH0_RTA,
+                manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL
             }));
         }
         else {
@@ -146,7 +145,7 @@ var logsTemplate = s(function () {/*
     <script type="text/javascript" src="https://fb.me/react-dom-0.14.0.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <script type="text/javascript" src="https://cdn.auth0.com/js/jwt-decode-1.4.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.auth0.com/js/navbar-1.0.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.auth0.com/js/navbar-1.0.4.min.js"></script>
     <title>Logs of <%= container %></title>
     <style>
         body, html {
@@ -201,13 +200,13 @@ var logsTemplate = s(function () {/*
         <div class="container">
           <div class="navbar-header">
             <h1 class="navbar-brand">
-              <a href="http://manage.auth0.com/"><span>Auth0</span></a>
+              <a href="<%- manageUrl %>"><span>Auth0</span></a>
             </h1>
           </div>
           <div id="navbar-collapse" class="collapse navbar-collapse">
             <script type="text/babel">
               ReactDOM.render(
-                <Navbar baseUrl="<%- baseUrl%>"/>,
+                <Navbar baseUrl="<%- baseUrl%>" domain='<%- rta %>'/>,
                 document.getElementById('navbar-collapse')
               );
             </script>
@@ -223,9 +222,9 @@ var logsTemplate = s(function () {/*
             <div class="row">
               <div class="col-xs-12 content-header">
                 <ol class="breadcrumb">
-                  <li><a href="https://manage.auth0.com/" target="_blank">Auth0 Dashboard</a>
+                  <li><a href="<%- manageUrl %>" target="_blank">Auth0 Dashboard</a>
                   </li>
-                  <li><a href="https://manage.auth0.com/#/extensions" target="_blank">Extensions</a>
+                  <li><a href="<%- manageUrl %>/#/extensions" target="_blank">Extensions</a>
                   </li>
                 </ol>
               </div>
