@@ -5,17 +5,11 @@
   "author": "Auth0, Inc",
   "description": "Access real-time webtask logs",
   "type": "application",
-  "codeUrl": "https://raw.githubusercontent.com/auth0/auth0-extension-realtime-logs/appliance1/build/bundle.js",
   "keywords": [
     "auth0",
     "extension",
     "webtask",
     "logs",
     "real-time"
-  ],
-  "secrets": {
-      "AUTH0_ROOT_AUTHORITY": {
-        "description": "The DNS name of the root authority of this deployment, e.g. login0.example.com."
-      }
-  }
+  ]
 }
