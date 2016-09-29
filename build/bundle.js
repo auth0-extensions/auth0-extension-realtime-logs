@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.redirect([
-        req.webtaskContext.data.AUTH0_RTA, '/i/oauth2/authorize',
+        req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com', '/i/oauth2/authorize',
         '?client_id=', req.baseUrl,
         '&response_type=token&expiration=86400000&response_mode=form_post',
         '&scope=', encodeURIComponent('openid profile'),
@@ -53,7 +53,7 @@ app.post('/',
                 token: req.x_wt.token,
                 container: req.x_wt.container,
                 baseUrl: req.baseUrl,
-                rta: req.webtaskContext.data.AUTH0_RTA,
+                rta: req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com',
                 manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL
             }));
         }
