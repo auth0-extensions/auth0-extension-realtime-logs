@@ -15,8 +15,7 @@
   "author": "Auth0, Inc",
   "license": "MIT",
   "dependencies": {
-    "auth0-oauth2-express": "1.1.7",
-    "express": "4.12.4",
+    "express": "4.14.0",
     "webtask-tools": "2.0.1",
     "body-parser": "1.12.4",
     "express-jwt": "3.1.0",
