@@ -5,6 +5,22 @@ var rsaValidation = require('auth0-api-jwt-rsa-validation');
 var ejs = require('ejs');
 var app = new (require('express'))();
 
+function resolveWebtaskAPIHost(host) {
+  if (host.indexOf('us.webtask.io') > 0) {
+    return 'https://sandbox.it.auth0.com';
+  }
+
+  if (host.indexOf('au.webtask.io') > 0) {
+    return 'https://sandbox-au.it.auth0.com';
+  }
+
+  if (host.indexOf('eu.webtask.io') > 0) {
+    return 'https://sandbox-eu.it.auth0.com';
+  }
+
+  return 'https://' + host;
+}
+
 app.use(function (req, res, next) {
     var xfproto = req.get('x-forwarded-proto');
     var xfport = req.get('x-forwarded-port');
@@ -17,6 +33,7 @@ app.use(function (req, res, next) {
         url.parse(req.originalUrl).pathname
     ].join('');
     req.audience = 'https://'+req.webtaskContext.data.AUTH0_DOMAIN+'/api/v2/';
+
     next();
 });
 
@@ -54,7 +71,8 @@ app.post('/',
                 container: req.x_wt.container,
                 baseUrl: req.baseUrl,
                 rta: req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com',
-                manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL
+                manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL,
+                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'))
             }));
         }
         else {
@@ -248,7 +266,7 @@ var logsTemplate = s(function () {/*
     <script>
     	var logs = webtaskWidget.showLogs({
 			mount: document.getElementById('widget_container'),
-			url: window.location.protocol + '//' + window.location.hostname,
+			url: '<%- webtaskAPIUrl %>',
 			token: '<%- token %>',
 			container: '<%- container %>'
     	});
