@@ -5,7 +5,7 @@ var rsaValidation = require('auth0-api-jwt-rsa-validation');
 var ejs = require('ejs');
 var app = new (require('express'))();
 
-function resolveWebtaskAPIHost(host) {
+function resolveWebtaskAPIHost(host, context) {
   if (host.indexOf('us.webtask.io') > 0) {
     return 'https://sandbox.it.auth0.com';
   }
@@ -16,6 +16,12 @@ function resolveWebtaskAPIHost(host) {
 
   if (host.indexOf('eu.webtask.io') > 0) {
     return 'https://sandbox-eu.it.auth0.com';
+  }
+
+  var wtUrl = context.secrets.WT_URL;
+
+  if (wtUrl && wtUrl.indexOf('api/run') >= 0 ) {
+    return context.secrets.WT_URL.split('/api')[0];
   }
 
   return 'https://' + host;
@@ -72,7 +78,7 @@ app.post('/',
                 baseUrl: req.baseUrl,
                 rta: req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com',
                 manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL,
-                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'))
+                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'), req.webtaskContext)
             }));
         }
         else {
