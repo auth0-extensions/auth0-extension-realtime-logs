@@ -6,7 +6,7 @@ var ejs = require('ejs');
 var app = new (require('express'))();
 const crypto = require('crypto');
 
-function resolveWebtaskAPIHost(host, context) {
+function resolveWebtaskAPIHost(host, context, container) {
   if (host.indexOf('us.webtask.io') > 0) {
     return 'https://sandbox.it.auth0.com';
   }
@@ -25,7 +25,7 @@ function resolveWebtaskAPIHost(host, context) {
     return context.secrets.WT_URL.split('/api')[0];
   }
 
-  return 'https://' + host;
+  return 'https://' + host.replace(container + '.', '');
 }
 
 app.use(function (req, res, next) {
@@ -80,7 +80,7 @@ app.post('/',
                 baseUrl: req.baseUrl,
                 rta: req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com',
                 manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL,
-                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'), req.webtaskContext)
+                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'), req.webtaskContext, req.x_wt.container)
             }));
         }
         else {
