@@ -4,8 +4,9 @@ var expressJwt = require('express-jwt');
 var rsaValidation = require('auth0-api-jwt-rsa-validation');
 var ejs = require('ejs');
 var app = new (require('express'))();
+const crypto = require('crypto');
 
-function resolveWebtaskAPIHost(host, context) {
+function resolveWebtaskAPIHost(host, context, container) {
   if (host.indexOf('us.webtask.io') > 0) {
     return 'https://sandbox.it.auth0.com';
   }
@@ -24,7 +25,7 @@ function resolveWebtaskAPIHost(host, context) {
     return context.secrets.WT_URL.split('/api')[0];
   }
 
-  return 'https://' + host;
+  return 'https://' + host.replace(container + '.', '');
 }
 
 app.use(function (req, res, next) {
@@ -45,12 +46,13 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.redirect([
-        req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com', '/i/oauth2/authorize',
+        req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com', '/authorize',
         '?client_id=', req.baseUrl,
         '&response_type=token&expiration=86400000&response_mode=form_post',
         '&scope=', encodeURIComponent('openid profile'),
         '&redirect_uri=', req.baseUrl,
-        '&audience=', req.audience
+        '&audience=', req.audience,
+        '&nonce=' + encodeURIComponent(crypto.randomBytes(16).toString('hex'))
     ].join(''));
 });
 
@@ -78,7 +80,7 @@ app.post('/',
                 baseUrl: req.baseUrl,
                 rta: req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com',
                 manageUrl: req.webtaskContext.data.AUTH0_MANAGE_URL,
-                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'), req.webtaskContext)
+                webtaskAPIUrl: resolveWebtaskAPIHost(req.get('host'), req.webtaskContext, req.x_wt.container)
             }));
         }
         else {
