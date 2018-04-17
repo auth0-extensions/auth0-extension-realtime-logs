@@ -4,6 +4,7 @@ var expressJwt = require('express-jwt');
 var rsaValidation = require('auth0-api-jwt-rsa-validation');
 var ejs = require('ejs');
 var app = new (require('express'))();
+var crypto = require('crypto');
 
 function resolveWebtaskAPIHost(host, context) {
   if (host.indexOf('us.webtask.io') > 0) {
@@ -16,6 +17,18 @@ function resolveWebtaskAPIHost(host, context) {
 
   if (host.indexOf('eu.webtask.io') > 0) {
     return 'https://sandbox-eu.it.auth0.com';
+  }
+
+  if (host.indexOf('us8.webtask.io') > 0) {
+    return 'https://sandbox8-us.it.auth0.com';
+  }
+
+  if (host.indexOf('au8.webtask.io') > 0) {
+    return 'https://sandbox8-au.it.auth0.com';
+  }
+
+  if (host.indexOf('eu8.webtask.io') > 0) {
+    return 'https://sandbox8-eu.it.auth0.com';
   }
 
   var wtUrl = context.secrets.WT_URL;
@@ -45,12 +58,13 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.redirect([
-        req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com', '/i/oauth2/authorize',
+        req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com', '/authorize',
         '?client_id=', req.baseUrl,
         '&response_type=token&expiration=86400000&response_mode=form_post',
         '&scope=', encodeURIComponent('openid profile'),
         '&redirect_uri=', req.baseUrl,
-        '&audience=', req.audience
+        '&audience=', req.audience,
+        '&nonce=' + encodeURIComponent(crypto.randomBytes(16).toString('hex'))
     ].join(''));
 });
 
