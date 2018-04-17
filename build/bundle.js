@@ -19,6 +19,18 @@ function resolveWebtaskAPIHost(host, context) {
     return 'https://sandbox-eu.it.auth0.com';
   }
 
+  if (host.indexOf('us8.webtask.io') > 0) {
+    return 'https://sandbox8-us.it.auth0.com';
+  }
+
+  if (host.indexOf('au8.webtask.io') > 0) {
+    return 'https://sandbox8-au.it.auth0.com';
+  }
+
+  if (host.indexOf('eu8.webtask.io') > 0) {
+    return 'https://sandbox8-eu.it.auth0.com';
+  }
+
   var wtUrl = context.secrets.WT_URL;
 
   if (wtUrl && wtUrl.indexOf('api/run') >= 0 ) {
