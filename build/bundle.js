@@ -4,7 +4,7 @@ var expressJwt = require('express-jwt');
 var rsaValidation = require('auth0-api-jwt-rsa-validation');
 var ejs = require('ejs');
 var app = new (require('express'))();
-const crypto = require('crypto');
+var crypto = require('crypto');
 
 function resolveWebtaskAPIHost(host, context) {
   if (host.indexOf('us.webtask.io') > 0) {
