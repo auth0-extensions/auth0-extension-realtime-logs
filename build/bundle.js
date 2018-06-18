@@ -177,7 +177,7 @@ var logsTemplate = s(function () {/*
     <link rel="shortcut icon" href="https://cdn.auth0.com/styleguide/2.0.1/lib/logos/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="https://cdn.auth0.com/manage/v0.3.973/css/index.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.auth0.com/styleguide/3.1.6/index.css">
-    <script src="https://cdn.auth0.com/webtaskWidget/auth0-webtask-widget-2.0.min.js"></script>
+    <script src="https://cdn.auth0.com/auth0-extend/components/1/extend-editor-logs.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://fb.me/react-0.14.0.min.js"></script>
     <script type="text/javascript" src="https://fb.me/react-dom-0.14.0.js"></script>
@@ -284,12 +284,10 @@ var logsTemplate = s(function () {/*
     <div class="message"><div>Press ESC to exit full screen mode</div></div>
     <div id="widget_container" class="logs"></div>
     <script>
-    	var logs = webtaskWidget.showLogs({
-			mount: document.getElementById('widget_container'),
-			url: '<%- webtaskAPIUrl %>',
-			token: '<%- token %>',
-			container: '<%- container %>'
-    	});
+
+      ExtendEditorLogsComponent.show(document.getElementById('widget_container'), {
+        token: '<%- token %>'
+      });
 
       $('.js-full-screen').on('click', function () {
         $('.dashboard-header').hide();
