@@ -108,7 +108,7 @@ app.get('/meta', function (req, res) {
     res.json({
       "title": "Real-time Webtask Logs",
       "name": "auth0-extension-realtime-logs",
-      "version": "1.0.3",
+      "version": "1.3.0",
       "author": "Auth0, Inc",
       "description": "Access real-time webtask logs",
       "type": "application",
