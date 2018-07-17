@@ -6,6 +6,7 @@
   "description": "Access real-time webtask logs",
   "type": "application",
   "repository": "https://github.com/auth0/auth0-extension-realtime-logs",
+  "docsUrl": "https://auth0.com/docs/extensions/realtime-webtask-logs",
   "keywords": [
     "auth0",
     "extension",
