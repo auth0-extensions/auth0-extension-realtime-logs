@@ -97,4 +97,32 @@ app.get('/logout', function(req, res) {
   }));
 });
 
+app.use(function(err, req, res, next) {
+  if (err && err.status) {
+    res.status(err.status);
+    return res.json({
+      error: err.code || err.name,
+      message: err.message || err.name
+    });
+  }
+
+  res.status(err.status || 500);
+  if (process.env.NODE_ENV === 'production') {
+    return res.json({
+      error: 'InternalServerError',
+      message: err.message || err.name
+    });
+  }
+
+  return res.json({
+    error: 'InternalServerError',
+    message: err.message || err.name,
+    details: {
+      message: err.message,
+      status: err.status,
+      stack: err.stack
+    }
+  });
+});
+
 module.exports = app;
