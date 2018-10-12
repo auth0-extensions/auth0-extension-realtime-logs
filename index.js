@@ -106,7 +106,7 @@ app.use(function(err, req, res, next) {
     });
   }
 
-  res.status(err.status || 500);
+  res.status(500);
   if (process.env.NODE_ENV === 'production') {
     return res.json({
       error: 'InternalServerError',
@@ -118,8 +118,6 @@ app.use(function(err, req, res, next) {
     error: 'InternalServerError',
     message: err.message || err.name,
     details: {
-      message: err.message,
-      status: err.status,
       stack: err.stack
     }
   });
