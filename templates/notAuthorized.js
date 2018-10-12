@@ -1,4 +1,4 @@
-module.export = `<!DOCTYPE html5>
+module.exports = `<!DOCTYPE html5>
 <html>
   <head>
     <meta charset="utf-8"/>
