@@ -122,6 +122,8 @@ module.exports = `<!DOCTYPE html5>
       ExtendEditorLogsComponent.show(document.getElementById('widget_container'), {
         token: '<%- token %>',
         hostUrl: '<%- webtaskAPIUrl %>',
+        showErrors: true,
+        autoReconnect: false,
         theme: 'dark'
       });
 
