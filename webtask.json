@@ -1,8 +1,8 @@
 {
   "title": "Real-time Webtask Logs",
   "name": "auth0-extension-realtime-logs",
-  "version": "1.3.4",
-  "preVersion": "1.3.3",
+  "version": "1.3.5",
+  "preVersion": "1.3.4",
   "author": "Auth0, Inc",
   "description": "Access real-time webtask logs",
   "type": "application",
