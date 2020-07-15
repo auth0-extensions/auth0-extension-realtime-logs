@@ -76,13 +76,26 @@ app.get('/.well-known/oauth2-client-configuration', function (req, res) {
     });
 });
 
+function jwtMiddleware(req, res, next) {
+  const rta = req.webtaskContext.data.AUTH0_RTA || 'https://auth0.auth0.com';
+  const middleware = expressJwt({
+    secret: rsaValidation({ strictSSL: true }),
+    algorithms: ['RS256'],
+    getToken: function(req) { return req.body.access_token; },
+
+    /**
+     * Note: We're normalizing the issuer because the access token `iss`
+     * ends in a slash whereas the `AUTH0_RTA` secret does not.
+     */
+    issuer: rta.endsWith('/') ? rta : `${rta}/`,
+  })
+
+  return middleware(req, res, next);
+}
+
 app.post('/',
     bodyParser.urlencoded({ extended: false }),
-    expressJwt({
-        secret: rsaValidation({ strictSSL: true }),
-        algorithms: [ 'RS256' ],
-        getToken: req => req.body.access_token
-    }),
+    jwtMiddleware,
     function (req, res) {
         if (req.user.aud === req.audience || Array.isArray(req.user.aud) && req.user.aud.indexOf(req.audience) > -1) {
             res.send(ejs.render(logsTemplate, {
