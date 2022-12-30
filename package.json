@@ -37,8 +37,8 @@
     "ejs": "2.3.1"
   },
   "devDependencies": {
-    "auth0-extensions-cli": "^1.0.9",
-    "jest": "^23.6.0",
+    "auth0-extensions-cli": "^1.4.0",
+    "jest": "^29.3.1",
     "rimraf": "^2.6.2"
   }
 }
