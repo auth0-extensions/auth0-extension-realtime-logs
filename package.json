@@ -1,6 +1,6 @@
 {
   "name": "auth0-extension-realtime-logs",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "Access real-time webtask logs",
   "scripts": {
     "build": "npm run clean && npm run extension:build",
