@@ -33,11 +33,11 @@
     "webtask-tools": "2.0.1",
     "body-parser": "1.12.4",
     "express-jwt": "3.1.0",
-    "auth0-api-jwt-rsa-validation": "0.0.1",
+    "auth0-api-jwt-rsa-validation": "0.0.3",
     "ejs": "2.3.1"
   },
   "devDependencies": {
-    "auth0-extensions-cli": "^1.0.9",
+    "auth0-extensions-cli": "^4.0.4",
     "jest": "^23.6.0",
     "rimraf": "^2.6.2"
   }
